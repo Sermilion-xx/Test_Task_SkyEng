@@ -35,7 +35,7 @@
         android:layout_marginStart="15sp"
         android:layout_marginTop="24dp"
         android:lineSpacingExtra="2dp"
-        android:text="@string/skyeng" />
+        android:text="@string/skyeng"/>
 
     <EditText
         android:id="@+id/login_email"
