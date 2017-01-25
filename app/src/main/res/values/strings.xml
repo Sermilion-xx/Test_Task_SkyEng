@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SkyEngLogin</string>
+    <string name="skyeng">Войдите под вашим аккаунтом в школе Skyeng и получите доступ к мобильному личному кабинету.</string>
+    <string name="email">Электронная почта</string>
+    <string name="get_temp_password">Получить код для входа</string>
+    <string name="default_login">Обычный вход с паролем</string>
+    <string name="login_info">Сложный пароль или не хотите искать — войдите по коду. Или используйте обычный вход.</string>
+</resources>
