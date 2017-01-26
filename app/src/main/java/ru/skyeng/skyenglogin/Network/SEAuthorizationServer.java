@@ -1,16 +1,12 @@
 package ru.skyeng.skyenglogin.Network;
 
 
-import android.util.Pair;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import ru.skyeng.skyenglogin.Network.Interfaces.AuthorizationServer;
 import ru.skyeng.skyenglogin.Network.Interfaces.JWTGenerator;
@@ -19,6 +15,7 @@ import ru.skyeng.skyenglogin.Network.Misc.SEAuthorizationException;
 import ru.skyeng.skyenglogin.Network.Misc.SEInternalServerError;
 import ru.skyeng.skyenglogin.Network.Misc.SENoSuchEmailException;
 import ru.skyeng.skyenglogin.Network.Misc.SETimeoutException;
+import ru.skyeng.skyenglogin.Network.Misc.TempPassGenerator;
 
 /**
  * ---------------------------------------------------
@@ -34,8 +31,9 @@ public class SEAuthorizationServer implements AuthorizationServer<String> {
 
     private static SEAuthorizationServer INSTANCE;
     private static final String SUBJECT_LOGIN = "Login";
-    private List<Pair<String, String>> loginDataList;
+    private List<SEUser> mLoginDataList;
     private JWTGenerator mGenerator;
+    private TempPassGenerator mTempPassGenerator;
     private Random mRandom;
 
     public static AuthorizationServer getInstance() {
@@ -56,9 +54,10 @@ public class SEAuthorizationServer implements AuthorizationServer<String> {
 
     private SEAuthorizationServer() {
         mRandom = new Random();
-        this.loginDataList = new ArrayList<>();
-        this.loginDataList.add(new Pair<>("email1@email.ru", "1"));
-        this.loginDataList.add(new Pair<>("email2@email.ru", "2"));
+        mTempPassGenerator = new TempPassGenerator(6);
+        this.mLoginDataList = new ArrayList<>();
+        this.mLoginDataList.add(new SEUser("email1@email.ru", "1"));
+        this.mLoginDataList.add(new SEUser("email2@email.ru", "2"));
     }
 
     @Override
@@ -71,25 +70,31 @@ public class SEAuthorizationServer implements AuthorizationServer<String> {
         if (chance == 1) {
             callback.onError(new SETimeoutException("Тайм аут."));
         } else {
-            if (loginDataList.contains(new Pair<String, Object>(email, password))) {
-                String token = mGenerator.generate(SUBJECT_LOGIN, email, password);
-                callback.onSuccess(token);
-            } else {
-                callback.onError(new SEAuthorizationException("Ошибка авторизации. Неверные данные."));
+            boolean found = false;
+            for (SEUser user : mLoginDataList) {
+                if (user.compareTo(new SEUser(email, password)) == 0) {
+                    String token = mGenerator.generate(SUBJECT_LOGIN, email, password);
+                    callback.onSuccess(token);
+                    found = true;
+                }
+                if (!found) {
+                    callback.onError(new SEAuthorizationException("Ошибка авторизации. Неверные данные."));
+                }
             }
         }
     }
 
     @Override
-    public void authorizeOneTime(String email, SENetworkCallback callback) {
+    public void generateOneTimePass(String email, SENetworkCallback<String> callback) {
         int chance = mRandom.nextInt(5);
         if (chance == 1) {
             callback.onError(new SETimeoutException("Тайм аут."));
         } else {
-            for (Pair<String, String> user : loginDataList) {
-                if (user.first.equals(email)) {
-                    String token = mGenerator.generate(SUBJECT_LOGIN, email, user.second);
-                    callback.onSuccess(token);
+            for (SEUser user : mLoginDataList) {
+                if (user.getEmail().equals(email)) {
+                    String tempPass = mTempPassGenerator.nextString();
+                    user.setTempPassword(tempPass);
+                    callback.onSuccess(tempPass);
                 } else {
                     callback.onError(new SENoSuchEmailException("Имейл не существует."));
                 }
@@ -110,11 +115,7 @@ public class SEAuthorizationServer implements AuthorizationServer<String> {
             if (jsonObject.has(SEJWTGenerator.KEY_PASSWORD)) {
                 passwordValue = jsonObject.getString(SEJWTGenerator.KEY_PASSWORD);
             }
-            if (loginDataList.contains(new Pair<String, Object>(emailValue, passwordValue))) {
-                return true;
-            } else {
-                return false;
-            }
+            return mLoginDataList.contains(new SEUser(emailValue, passwordValue));
         } catch (JSONException e) {
             e.printStackTrace();
         }

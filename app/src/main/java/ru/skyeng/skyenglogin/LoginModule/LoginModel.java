@@ -1,13 +1,11 @@
 package ru.skyeng.skyenglogin.LoginModule;
 
 import android.content.Context;
-import android.os.Bundle;
 
-import ru.skyeng.skyenglogin.MVC.SEDelegate;
-import ru.skyeng.skyenglogin.MVC.SEModel;
-import ru.skyeng.skyenglogin.Network.Interfaces.SENetworkCallback;
 import ru.skyeng.skyenglogin.Application.SEApplication;
+import ru.skyeng.skyenglogin.Network.Interfaces.SENetworkCallback;
 import ru.skyeng.skyenglogin.Network.SEAuthorizationServer;
+import ru.skyeng.skyenglogin.Utility.SEDelegate;
 
 /**
  * ---------------------------------------------------
@@ -19,14 +17,16 @@ import ru.skyeng.skyenglogin.Network.SEAuthorizationServer;
  * ---------------------------------------------------
  */
 
-public class LoginModel implements SEModel {
+public class LoginModel {
 
+    private Context mContext;
     private SEAuthorizationServer mServer;
-    private SEDelegate<String>  mDelegate;
+    private SEDelegate<String> mDelegate;
     public final String KEY_EMAIL = "email";
     public final String KEY_PASSWORD = "password";
 
-    public LoginModel(Context context){
+    public LoginModel(Context context) {
+        mContext = context;
         mServer = ((SEApplication) context.getApplicationContext()).getServer();
     }
 
@@ -34,27 +34,35 @@ public class LoginModel implements SEModel {
         this.mDelegate = mDelegate;
     }
 
-    @Override
-    public void loadData(Bundle params) {
-        String email = params.getString(KEY_EMAIL);
-        if(params.containsKey(KEY_PASSWORD)){
-            String password = params.getString(KEY_PASSWORD);
-            mServer.authorize(email, password, new SENetworkCallback<String>() {
-                @Override
-                public void onSuccess(String token) {
-                    mDelegate.doWork(token);
-                }
 
-                @Override
-                public void onError(Throwable throwable) {
-                    mDelegate.doWork(throwable.getMessage());
-                }
-            });
-        }
+    public void authorize(String email, String password) {
+        mServer.authorize(email, password, new SENetworkCallback<String>() {
+            @Override
+            public void onSuccess(String token) {
+                mDelegate.onComplete(token);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                mDelegate.onComplete(throwable.getMessage());
+            }
+        });
     }
 
-    @Override
-    public Object processResult(Object result) {
-        return null;
+
+    private void getOneTimePass(final String email) {
+        mServer.generateOneTimePass(email, new SENetworkCallback<String>() {
+            @Override
+            public void onSuccess(String tempPass) {
+                //show in notification
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+                //make snackbar
+            }
+        });
     }
+
 }

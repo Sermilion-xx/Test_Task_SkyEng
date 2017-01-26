@@ -64,7 +64,7 @@
 
 
         <Button
-            android:id="@+id/button_get_code"
+            android:id="@+id/button_get_code_or_login"
             style="@style/textStyleLoginOptions"
             android:layout_height="64dp"
             android:layout_below="@+id/login_password"
@@ -74,13 +74,13 @@
             android:layout_marginTop="24dp"
             android:background="@drawable/button_selector"
             android:enabled="false"
-            android:text="@string/get_temp_password" />
+            android:text="@string/get_code" />
 
         <TextView
             android:id="@+id/login_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/default_login"
+            android:layout_below="@+id/default_login_or_code"
             android:layout_marginEnd="15sp"
             android:layout_marginStart="15sp"
             android:layout_marginTop="26dp"
@@ -92,14 +92,14 @@
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/default_login"
+            android:id="@+id/default_login_or_code"
             style="@style/textStyleLoginOptions"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/button_get_code"
+            android:layout_below="@+id/button_get_code_or_login"
             android:layout_marginTop="20dp"
             android:background="@null"
             android:minHeight="0dp"
-            android:text="@string/default_login"
+            android:text="@string/login_password"
             android:textColor="@color/colorAccent"
             android:textSize="22sp" />
 

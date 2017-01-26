@@ -1,4 +1,4 @@
-package ru.skyeng.skyenglogin.MVC;
+package ru.skyeng.skyenglogin.Utility;
 
 import android.os.Bundle;
 
@@ -14,6 +14,6 @@ import android.os.Bundle;
 
 public interface SEDelegate<T> {
 
-    void doWork(T param);
+    void onComplete(T param);
 
 }

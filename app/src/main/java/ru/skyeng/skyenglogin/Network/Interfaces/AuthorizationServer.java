@@ -13,7 +13,7 @@ package ru.skyeng.skyenglogin.Network.Interfaces;
 public interface AuthorizationServer<T> {
 
     void authorize(String email, String password, SENetworkCallback<T> callback);
-    void authorizeOneTime(String email, SENetworkCallback<T> callback);
+    void generateOneTimePass(String email, SENetworkCallback<T> callback);
     void setJWTGenerator(JWTGenerator generator);
     boolean authenticate(String token);
 }
