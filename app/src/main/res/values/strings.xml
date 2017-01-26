@@ -5,4 +5,7 @@
     <string name="get_temp_password">Получить код для входа</string>
     <string name="default_login">Обычный вход с паролем</string>
     <string name="login_info">Сложный пароль или не хотите искать — войдите по коду. Или используйте обычный вход.</string>
+    <string name="password">Пароль</string>
+    <string name="login">Войти</string>
+    <string name="Code">Код</string>
 </resources>

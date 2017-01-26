@@ -26,61 +26,47 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <TextView
-            android:id="@+id/login_text"
+            android:id="@+id/code_text"
             style="@style/textStyleMain"
             android:layout_centerHorizontal="true"
             android:layout_marginEnd="15sp"
             android:layout_marginStart="15sp"
             android:layout_marginTop="24dp"
             android:lineSpacingExtra="2dp"
-            android:text="@string/skyeng" />
+            android:text="Введите код" />
 
         <EditText
-            android:id="@+id/login_email"
+            android:id="@+id/login_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/login_text"
+            android:layout_below="@+id/code_text"
             android:layout_centerHorizontal="true"
             android:layout_marginEnd="15sp"
             android:layout_marginStart="15sp"
             android:layout_marginTop="12dp"
-            android:hint="@string/email"
+            android:hint="@string/Code"
             android:inputType="textEmailAddress"
             android:selectAllOnFocus="true" />
 
-        <EditText
-            android:id="@+id/login_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/login_email"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="15sp"
-            android:layout_marginStart="15sp"
-            android:layout_marginTop="12dp"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:selectAllOnFocus="true"
-            android:visibility="gone" />
-
 
         <Button
-            android:id="@+id/button_get_code"
+            android:id="@+id/button_login"
             style="@style/textStyleLoginOptions"
             android:layout_height="64dp"
-            android:layout_below="@+id/login_password"
+            android:layout_below="@+id/login_code"
             android:layout_centerHorizontal="true"
             android:layout_marginEnd="15sp"
             android:layout_marginStart="15sp"
             android:layout_marginTop="24dp"
             android:background="@drawable/button_selector"
             android:enabled="false"
-            android:text="@string/get_temp_password" />
+            android:text="@string/login" />
 
         <TextView
-            android:id="@+id/login_info"
+            android:id="@+id/code_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/default_login"
+            android:layout_below="@+id/code_button"
             android:layout_marginEnd="15sp"
             android:layout_marginStart="15sp"
             android:layout_marginTop="26dp"
@@ -92,10 +78,10 @@
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/default_login"
+            android:id="@+id/code_button"
             style="@style/textStyleLoginOptions"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/button_get_code"
+            android:layout_below="@+id/button_login"
             android:layout_marginTop="20dp"
             android:background="@null"
             android:minHeight="0dp"
