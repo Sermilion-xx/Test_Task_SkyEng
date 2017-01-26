@@ -31,7 +31,10 @@ import static ru.skyeng.skyenglogin.Network.SEAuthorizationServer.TYPE_TEMP_PASS
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, SENetworkCallback<String> {
 
-    private static final String KEY_BUTTON_ENABLED = "buttonVisibility";
+    private static final String KEY_BUTTON_ENABLED = "buttonEnabled";
+    private static final String KEY_BUTTON_SHOWNING = "buttonShowing";
+    private static final String KEY_BUTTON_SECONDARY_TEXT = "buttonSecondaryText";
+    private static final String KEY_LOGIN_BY_CODE = "loginByCode";
     private static int NOTIFICATION_ID = 0;
     private EditText mEmailEditTex;
     private EditText mPasswordEditText;
@@ -56,8 +59,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        boolean enabled = mGetCodeOrLoginButton.isEnabled();
-        outState.putBoolean(KEY_BUTTON_ENABLED, enabled);
+        outState.putBoolean(KEY_BUTTON_ENABLED, mGetCodeOrLoginButton.isEnabled());
+        outState.putInt(KEY_BUTTON_SHOWNING, mPasswordEditText.getVisibility());
+        outState.putString(KEY_BUTTON_SECONDARY_TEXT, mLoginDefaultOrCode.getText().toString());
+        outState.putBoolean(KEY_LOGIN_BY_CODE, loginByCode);
         super.onSaveInstanceState(outState);
     }
 
@@ -79,12 +84,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mPasswordEditText = (EditText) findViewById(R.id.login_password);
         mPasswordEditText.addTextChangedListener(textWatcher);
         mGetCodeOrLoginButton = (Button) findViewById(R.id.button_get_code_or_login);
-        if(savedInstanceState!=null){
-            mGetCodeOrLoginButton.setEnabled(true);
-        }
         //TODO: preserve button state on orientation change
         mLoginDefaultOrCode = (Button) findViewById(R.id.default_login_or_code);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        if(savedInstanceState!=null){
+            loginByCode = savedInstanceState.getBoolean(KEY_LOGIN_BY_CODE);
+            mGetCodeOrLoginButton.setEnabled(true);
+            int visibility = savedInstanceState.getInt(KEY_BUTTON_SHOWNING);
+            if(visibility==0x00000000) {
+                mPasswordEditText.setVisibility(View.VISIBLE);
+            }else if(visibility==0x00000008){
+                mPasswordEditText.setVisibility(View.GONE);
+            }
+            mLoginDefaultOrCode.setText(savedInstanceState.getString(KEY_BUTTON_SECONDARY_TEXT));
+        }
         mProgressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY);
         mGetCodeOrLoginButton.setOnClickListener(this);
         mLoginDefaultOrCode.setOnClickListener(this);
@@ -115,13 +129,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        mProgressBar.setVisibility(View.VISIBLE);
         String email = mEmailEditTex.getText().toString();
         String password = mPasswordEditText.getText().toString();
         switch (v.getId()) {
             case R.id.button_get_code_or_login:
-                View view = this.getCurrentFocus();
-                hideKeyboard(view);
+                mProgressBar.setVisibility(View.VISIBLE);
+                FacadCommon.hideKeyboard(this);
                 if (loginByCode) {
                     mController.getOneTimePassword(email);
                 } else {
@@ -129,16 +142,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.default_login_or_code:
-                if (!loginByCode) {
+                if (loginByCode) {
                     mPasswordEditText.setVisibility(View.VISIBLE);
                     mGetCodeOrLoginButton.setText(getString(R.string.login));
                     mLoginDefaultOrCode.setText(getString(R.string.login_code));
+                    loginByCode = false;
                 } else {
                     mPasswordEditText.setVisibility(View.GONE);
                     mGetCodeOrLoginButton.setText(getString(R.string.get_code));
                     mLoginDefaultOrCode.setText(getString(R.string.login_password));
+                    loginByCode = true;
                 }
-                loginByCode = !loginByCode;
                 break;
         }
     }
@@ -162,10 +176,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Snackbar.make(coordinatorLayout, throwable.getMessage(), Snackbar.LENGTH_LONG).show();
     }
 
-    private void hideKeyboard(View view) {
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
 }

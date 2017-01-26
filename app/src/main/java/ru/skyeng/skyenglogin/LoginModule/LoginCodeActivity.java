@@ -117,6 +117,7 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View v) {
+        FacadCommon.hideKeyboard(this);
         if(v.getId()==R.id.code_resend_button){
             mResendCodeButton.setEnabled(false);
             count = TIMER_COUNT;

@@ -1,10 +1,13 @@
 package ru.skyeng.skyenglogin.Utility;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import ru.skyeng.skyenglogin.LoginModule.LoginActivity;
 import ru.skyeng.skyenglogin.R;
@@ -35,6 +38,14 @@ public class FacadCommon {
         noti.flags |= Notification.FLAG_AUTO_CANCEL;
         notificationManager.notify(NOTIFICATION_ID, noti);
         NOTIFICATION_ID++;
+    }
+
+    public static void hideKeyboard(Activity context) {
+        View view = context.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 }
