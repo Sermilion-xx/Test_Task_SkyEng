@@ -1,6 +1,8 @@
 package ru.skyeng.skyenglogin.Network;
 
 
+import android.os.Handler;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,8 +31,13 @@ import ru.skyeng.skyenglogin.Network.Misc.TempPassGenerator;
 
 public class SEAuthorizationServer implements AuthorizationServer<String> {
 
+    private static final int DELAY_MILLIS = 1000;
+    private static final String OPERATION_TIMEOUT = "Тайм аут запроса. Попробуйте еще раз.";
     private static SEAuthorizationServer INSTANCE;
     private static final String SUBJECT_LOGIN = "Login";
+    public static final int TYPE_TEMP_PASSWORD = 0;
+    public static final int TYPE_AUTHORIZE = 1;
+    public static final int TYPE_AUTHENTICATE = 2;
     private List<SEUser> mLoginDataList;
     private JWTGenerator mGenerator;
     private TempPassGenerator mTempPassGenerator;
@@ -41,10 +48,6 @@ public class SEAuthorizationServer implements AuthorizationServer<String> {
             INSTANCE = new SEAuthorizationServer();
         }
         return INSTANCE;
-    }
-
-    public void setGenerator(JWTGenerator mGenerator) {
-        this.mGenerator = mGenerator;
     }
 
     @Override
@@ -61,64 +64,93 @@ public class SEAuthorizationServer implements AuthorizationServer<String> {
     }
 
     @Override
-    public void authorize(String email, String password, SENetworkCallback<String> callback) {
-        if (mGenerator == null) {
-            callback.onError(new SEInternalServerError("На сервере произошла ошибка. Повторите позже"));
-            return;
-        }
-        int chance = mRandom.nextInt(5);
-        if (chance == 1) {
-            callback.onError(new SETimeoutException("Тайм аут."));
-        } else {
-            boolean found = false;
-            for (SEUser user : mLoginDataList) {
-                if (user.compareTo(new SEUser(email, password)) == 0) {
-                    String token = mGenerator.generate(SUBJECT_LOGIN, email, password);
-                    callback.onSuccess(token);
-                    found = true;
+    public void authorize(final String email, final String password, final SENetworkCallback<String> callback) {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mGenerator == null) {
+                    callback.onError(new SEInternalServerError("На сервере произошла ошибка. Повторите позже"));
+                    return;
                 }
-                if (!found) {
-                    callback.onError(new SEAuthorizationException("Ошибка авторизации. Неверные данные."));
-                }
-            }
-        }
-    }
-
-    @Override
-    public void generateOneTimePass(String email, SENetworkCallback<String> callback) {
-        int chance = mRandom.nextInt(5);
-        if (chance == 1) {
-            callback.onError(new SETimeoutException("Тайм аут."));
-        } else {
-            for (SEUser user : mLoginDataList) {
-                if (user.getEmail().equals(email)) {
-                    String tempPass = mTempPassGenerator.nextString();
-                    user.setTempPassword(tempPass);
-                    callback.onSuccess(tempPass);
+                int chance = mRandom.nextInt(5);
+                if (chance == 1) {
+                    callback.onError(new SETimeoutException(OPERATION_TIMEOUT));
                 } else {
-                    callback.onError(new SENoSuchEmailException("Имейл не существует."));
+                    boolean found = false;
+                    String token = "";
+                    SEUser otherUser = new SEUser(email, password);
+                    SEUser localUser = null;
+                    for (SEUser user : mLoginDataList) {
+                        localUser = user;
+                        if (user.compareTo(otherUser) == 0) {
+                            token = mGenerator.generate(SUBJECT_LOGIN, email, password);
+                            found = true;
+                        }
+                    }
+                    if (!found) {
+                        callback.onError(new SEAuthorizationException("Ошибка авторизации. Неверные данные."));
+                    }else{
+                        callback.onSuccess(token, TYPE_AUTHORIZE);
+                        localUser.setTempPassword(null);
+                    }
                 }
             }
-        }
+        }, DELAY_MILLIS);
     }
 
     @Override
-    public boolean authenticate(String token) {
-        String decodedJson = mGenerator.decodeToken(token);
-        try {
-            JSONObject jsonObject = new JSONObject(decodedJson);
-            String emailValue = "";
-            String passwordValue = "";
-            if (jsonObject.has(SEJWTGenerator.KEY_EMAIL)) {
-                emailValue = jsonObject.getString(SEJWTGenerator.KEY_EMAIL);
+    public void generateOneTimePass(final String email, final SENetworkCallback<String> callback) {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int chance = mRandom.nextInt(5);
+                if (chance == 1) {
+                    callback.onError(new SETimeoutException(OPERATION_TIMEOUT));
+                } else {
+                    boolean emailFound = false;
+                    for (SEUser user : mLoginDataList) {
+                        if (user.getEmail().equals(email)) {
+                            String tempPass = mTempPassGenerator.nextString();
+                            user.setTempPassword(tempPass);
+                            callback.onSuccess(tempPass, TYPE_TEMP_PASSWORD);
+                            emailFound = true;
+                        }
+                        if (!emailFound) {
+                            callback.onError(new SENoSuchEmailException("Указанная почта не существует"));
+                        }
+                    }
+                }
             }
-            if (jsonObject.has(SEJWTGenerator.KEY_PASSWORD)) {
-                passwordValue = jsonObject.getString(SEJWTGenerator.KEY_PASSWORD);
+        }, DELAY_MILLIS);
+
+    }
+
+    @Override
+    public void authenticate(final String token, final SENetworkCallback<Boolean> callback) {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                String decodedJson = mGenerator.decodeToken(token);
+                try {
+                    JSONObject jsonObject = new JSONObject(decodedJson);
+                    String emailValue = "";
+                    String passwordValue = "";
+                    if (jsonObject.has(SEJWTGenerator.KEY_EMAIL)) {
+                        emailValue = jsonObject.getString(SEJWTGenerator.KEY_EMAIL);
+                    }
+                    if (jsonObject.has(SEJWTGenerator.KEY_PASSWORD)) {
+                        passwordValue = jsonObject.getString(SEJWTGenerator.KEY_PASSWORD);
+                    }
+                    if (mLoginDataList.contains(new SEUser(emailValue, passwordValue))) {
+                        callback.onSuccess(true, TYPE_AUTHENTICATE);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-            return mLoginDataList.contains(new SEUser(emailValue, passwordValue));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return false;
+        }, DELAY_MILLIS);
     }
 }

@@ -24,13 +24,7 @@ public class DataSource {
         }
     }
 
-    public byte[] getData(String token){
-        boolean done = mAuthServer.authenticate(token);
-        if(done){
 
-        }
-        return null;
-    }
 
 
 

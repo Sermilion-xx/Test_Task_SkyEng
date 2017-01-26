@@ -12,13 +12,13 @@ import android.support.annotation.NonNull;
  * ---------------------------------------------------
  */
 
-public class SEUser implements Comparable<SEUser>{
+class SEUser implements Comparable<SEUser>{
 
     private String email;
     private String password;
     private String tempPassword;
 
-    public SEUser(String email, String password) {
+    SEUser(String email, String password) {
         this.email = email;
         this.password = password;
     }
@@ -39,11 +39,11 @@ public class SEUser implements Comparable<SEUser>{
         this.password = password;
     }
 
-    public String getTempPassword() {
+    private String getTempPassword() {
         return tempPassword;
     }
 
-    public void setTempPassword(String tempPassword) {
+    void setTempPassword(String tempPassword) {
         this.tempPassword = tempPassword;
     }
 
@@ -51,7 +51,10 @@ public class SEUser implements Comparable<SEUser>{
     public int compareTo(@NonNull SEUser user) {
         boolean email = this.getEmail().equals(user.getEmail());
         boolean password = this.getPassword().equals(user.getPassword());
-        boolean tempPass = this.getTempPassword().equals(user.getPassword());
+        boolean tempPass = false;
+        if(this.getTempPassword()!=null) {
+            tempPass = this.getTempPassword().equals(user.getPassword());
+        }
         if(email && (password || tempPass)){
             return 0;
         }else{

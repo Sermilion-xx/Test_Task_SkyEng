@@ -16,4 +16,5 @@ public interface SEDelegate<T> {
 
     void onComplete(T param);
 
+
 }

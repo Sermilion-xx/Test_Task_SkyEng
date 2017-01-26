@@ -15,5 +15,5 @@ public interface AuthorizationServer<T> {
     void authorize(String email, String password, SENetworkCallback<T> callback);
     void generateOneTimePass(String email, SENetworkCallback<T> callback);
     void setJWTGenerator(JWTGenerator generator);
-    boolean authenticate(String token);
+    void authenticate(String token, final SENetworkCallback<Boolean> callback);
 }

@@ -21,12 +21,18 @@ import ru.skyeng.skyenglogin.Utility.FacadPreferences;
 public class LoginController {
 
     private Context mContext;
-    private AuthorizationServer<String> mServer;
     private LoginModel mModel;
 
-    public LoginController(Context context){
-        mContext = context;
-        mServer = ((SEApplication) context.getApplicationContext()).getServer();
+    public void setModel(LoginModel mModel) {
+        this.mModel = mModel;
+    }
+
+    public LoginController(){
+
+    }
+
+    public void setContext(Context mContext) {
+        this.mContext = mContext;
     }
 
     public void authorize(String email, String password){
@@ -38,9 +44,7 @@ public class LoginController {
     }
 
     public void getOneTimePassword(String email){
-
+        mModel.getOneTimePassword(email);
     }
-
-
 
 }

@@ -12,7 +12,7 @@ package ru.skyeng.skyenglogin.Network.Interfaces;
 
 public interface SENetworkCallback<T> {
 
-    void onSuccess(T result);
+    void onSuccess(T result, int requestType);
 
     void onError(Throwable throwable);
 }

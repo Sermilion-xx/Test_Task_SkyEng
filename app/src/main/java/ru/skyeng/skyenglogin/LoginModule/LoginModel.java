@@ -2,10 +2,8 @@ package ru.skyeng.skyenglogin.LoginModule;
 
 import android.content.Context;
 
-import ru.skyeng.skyenglogin.Application.SEApplication;
 import ru.skyeng.skyenglogin.Network.Interfaces.SENetworkCallback;
 import ru.skyeng.skyenglogin.Network.SEAuthorizationServer;
-import ru.skyeng.skyenglogin.Utility.SEDelegate;
 
 /**
  * ---------------------------------------------------
@@ -21,46 +19,49 @@ public class LoginModel {
 
     private Context mContext;
     private SEAuthorizationServer mServer;
-    private SEDelegate<String> mDelegate;
-    public final String KEY_EMAIL = "email";
-    public final String KEY_PASSWORD = "password";
+    private SENetworkCallback<String> mDelegate;
 
-    public LoginModel(Context context) {
-        mContext = context;
-        mServer = ((SEApplication) context.getApplicationContext()).getServer();
+    public void setServer(SEAuthorizationServer mServer) {
+        this.mServer = mServer;
     }
 
-    public void setDelegate(SEDelegate mDelegate) {
+    public void setContext(Context mContext) {
+        this.mContext = mContext;
+    }
+
+    public LoginModel() {
+    }
+
+    public void setDelegate(SENetworkCallback<String> mDelegate) {
         this.mDelegate = mDelegate;
     }
-
 
     public void authorize(String email, String password) {
         mServer.authorize(email, password, new SENetworkCallback<String>() {
             @Override
-            public void onSuccess(String token) {
-                mDelegate.onComplete(token);
+            public void onSuccess(String token, int requestType) {
+                mDelegate.onSuccess(token, requestType);
             }
 
             @Override
             public void onError(Throwable throwable) {
-                mDelegate.onComplete(throwable.getMessage());
+                mDelegate.onError(throwable);
             }
         });
     }
 
 
-    private void getOneTimePass(final String email) {
+    public void getOneTimePassword(final String email) {
         mServer.generateOneTimePass(email, new SENetworkCallback<String>() {
             @Override
-            public void onSuccess(String tempPass) {
-                //show in notification
+            public void onSuccess(String tempPass, int requestType) {
+                mDelegate.onSuccess(tempPass, requestType);
             }
 
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();
-                //make snackbar
+                mDelegate.onError(throwable);
             }
         });
     }

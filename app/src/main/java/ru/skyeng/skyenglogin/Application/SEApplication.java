@@ -4,6 +4,10 @@ import android.app.Application;
 
 import javax.inject.Inject;
 
+import ru.skyeng.skyenglogin.LoginModule.LoginDagger.DaggerLoginCodeDiComponent;
+import ru.skyeng.skyenglogin.LoginModule.LoginDagger.DaggerLoginDiComponent;
+import ru.skyeng.skyenglogin.LoginModule.LoginDagger.LoginCodeDiComponent;
+import ru.skyeng.skyenglogin.LoginModule.LoginDagger.LoginDiComponent;
 import ru.skyeng.skyenglogin.Network.Interfaces.AuthorizationServer;
 import ru.skyeng.skyenglogin.Network.Interfaces.JWTGenerator;
 import ru.skyeng.skyenglogin.Network.SEAuthorizationServer;
@@ -20,6 +24,9 @@ import ru.skyeng.skyenglogin.Network.SEJWTGenerator;
  */
 
 public class SEApplication extends Application {
+
+    private LoginDiComponent mLoginDiComponent;
+    private LoginCodeDiComponent mLoginCodeDiComponent;
 
     @Inject
     SEAuthorizationServer mServer;
@@ -38,5 +45,15 @@ public class SEApplication extends Application {
         super.onCreate();
         ApplicationDiComponent mApplicationDiComponent = DaggerApplicationDiComponent.builder().build();
         mApplicationDiComponent.inject(this);
+        mLoginDiComponent = DaggerLoginDiComponent.builder().build();
+        mLoginCodeDiComponent = DaggerLoginCodeDiComponent.builder().build();
+    }
+
+    public LoginDiComponent getLoginDiComponent() {
+        return mLoginDiComponent;
+    }
+
+    public LoginCodeDiComponent getLoginCodeDiComponent() {
+        return mLoginCodeDiComponent;
     }
 }

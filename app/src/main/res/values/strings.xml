@@ -10,4 +10,8 @@
     <string name="login">Войти</string>
     <string name="Code">Код</string>
     <string name="logout">Выйти</string>
+    <string name="wrong_email">"Указанная почта не существует."</string>
+    <string name="enter_code">Введите код (отправленный на телефон</string>
+    <string name="resend_code">Выслать код повторно</string>
+    <string name="waiting_resend_code">Выслать код повторно (%1$s)</string>
 </resources>

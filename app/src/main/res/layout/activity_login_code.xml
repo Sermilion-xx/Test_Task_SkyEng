@@ -10,13 +10,7 @@
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        <include layout="@layout/toolbar" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -33,7 +27,7 @@
             android:layout_marginStart="15sp"
             android:layout_marginTop="24dp"
             android:lineSpacingExtra="2dp"
-            android:text="Введите код" />
+            android:text="@string/enter_code" />
 
         <EditText
             android:id="@+id/login_code"
@@ -62,32 +56,24 @@
             android:enabled="false"
             android:text="@string/login" />
 
-        <TextView
-            android:id="@+id/code_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/code_button"
-            android:layout_marginEnd="15sp"
-            android:layout_marginStart="15sp"
-            android:layout_marginTop="26dp"
-            android:paddingEnd="10dp"
-            android:paddingStart="10dp"
-            android:text="@string/login_info"
-            android:textAlignment="center"
-            android:textColor="@color/colorLightGray"
-            android:textSize="18sp" />
-
         <Button
-            android:id="@+id/code_button"
+            android:id="@+id/code_resend_button"
             style="@style/textStyleLoginOptions"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/button_login"
             android:layout_marginTop="20dp"
             android:background="@null"
             android:minHeight="0dp"
-            android:text="@string/login_password"
-            android:textColor="@color/colorAccent"
+            android:text="@string/resend_code"
+            android:textColor="@color/colorAccentLight"
             android:textSize="22sp" />
 
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </android.support.design.widget.CoordinatorLayout>
