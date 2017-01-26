@@ -1,11 +1,8 @@
 package ru.skyeng.skyenglogin.LoginModule;
 
 import android.content.Context;
-import android.content.Intent;
+import android.os.Handler;
 
-import ru.skyeng.skyenglogin.Application.SEApplication;
-import ru.skyeng.skyenglogin.Network.Interfaces.AuthorizationServer;
-import ru.skyeng.skyenglogin.Network.Interfaces.SENetworkCallback;
 import ru.skyeng.skyenglogin.Utility.FacadPreferences;
 
 /**
@@ -20,10 +17,11 @@ import ru.skyeng.skyenglogin.Utility.FacadPreferences;
 
 public class LoginController {
 
+    private static final int DELAY_MILLIS = 1000;
     private Context mContext;
     private LoginModel mModel;
 
-    public void setModel(LoginModel mModel) {
+    void setModel(LoginModel mModel) {
         this.mModel = mModel;
     }
 
@@ -31,20 +29,31 @@ public class LoginController {
 
     }
 
-    public void setContext(Context mContext) {
+    void setContext(Context mContext) {
         this.mContext = mContext;
     }
 
-    public void authorize(String email, String password){
-        mModel.authorize(email, password);
+    void authorize(final String email, final String password){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mModel.authorize(email, password);
+            }
+        }, DELAY_MILLIS);
     }
 
-    public void saveToken(String token){
+    void saveToken(String token){
         FacadPreferences.saveTokemToPref(mContext, token);
     }
 
-    public void getOneTimePassword(String email){
+    void getOneTimePassword(final String email){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
         mModel.getOneTimePassword(email);
+            }
+        }, DELAY_MILLIS);
     }
-
 }

@@ -1,8 +1,8 @@
-package ru.skyeng.skyenglogin.Network.Misc;
+package ru.skyeng.skyenglogin.Network.Exceptions;
 
 /**
  * ---------------------------------------------------
- * Created by Sermilion on 25/01/2017.
+ * Created by Sermilion on 26/01/2017.
  * Project: SkyEngLogin
  * ---------------------------------------------------
  * <a href="http://www.ucomplex.org">ucomplex.org</a>
@@ -10,11 +10,10 @@ package ru.skyeng.skyenglogin.Network.Misc;
  * ---------------------------------------------------
  */
 
-public class SEAuthorizationException extends Exception {
-
+public class SEInternalServerError extends Exception {
     private String mMessage;
 
-    public SEAuthorizationException(String message){
+    public SEInternalServerError(String message){
         this.mMessage = message;
     }
 

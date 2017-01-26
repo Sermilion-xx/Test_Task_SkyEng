@@ -1,15 +1,21 @@
 package ru.skyeng.skyenglogin.Network;
 
 import android.util.Base64;
-import android.util.Pair;
 
 import java.security.Key;
+import java.util.Date;
 import java.util.HashMap;
 
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
 import ru.skyeng.skyenglogin.Network.Interfaces.JWTGenerator;
+
+import static io.jsonwebtoken.Jwts.parser;
 
 /**
  * ---------------------------------------------------
@@ -23,8 +29,8 @@ import ru.skyeng.skyenglogin.Network.Interfaces.JWTGenerator;
 
 public class SEJWTGenerator implements JWTGenerator {
 
-    static final String KEY_EMAIL = "email";
-    static final String KEY_PASSWORD = "password";
+    public static final String KEY_EMAIL = "email";
+    public static final String KEY_PASSWORD = "password";
 
     @Override
     public String generate(String subject, String email, String password) {
@@ -32,22 +38,23 @@ public class SEJWTGenerator implements JWTGenerator {
         HashMap<String, Object> claimMap = new HashMap<>();
         claimMap.put(KEY_EMAIL, email);
         claimMap.put(KEY_PASSWORD, password);
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+        long nowMillis = System.currentTimeMillis();
+        Date now = new Date(nowMillis);
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary("se_test_secret");
+        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         return Jwts.builder()
-                .setSubject(subject).setClaims(claimMap)
+                .setIssuedAt(now)
+                .setSubject(subject)
+                .setClaims(claimMap)
                 .signWith(SignatureAlgorithm.HS512, key)
+                .signWith(signatureAlgorithm, signingKey)
                 .compact();
     }
 
-    @Override
-    public String decodeToken(String token) {
-        String[] parts = token.split(".");
-        return decode(parts[1]);
-
+    public Claims decodeToken(String jwt) {
+        return parser().setSigningKey(DatatypeConverter.parseBase64Binary("se_test_secret"))
+                .parseClaimsJws(jwt).getBody();
     }
-
-    private String decode(String part){
-        return new String(Base64.decode(part, Base64.DEFAULT));
-    }
-
 }

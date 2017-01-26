@@ -2,6 +2,8 @@ package ru.skyeng.skyenglogin.Network.Interfaces;
 
 import android.util.Pair;
 
+import io.jsonwebtoken.Claims;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 25/01/2017.
@@ -15,5 +17,5 @@ import android.util.Pair;
 public interface JWTGenerator {
 
     String generate(String subject, String email, String password);
-    String decodeToken(String token);
+    Claims decodeToken(String jwt);
 }

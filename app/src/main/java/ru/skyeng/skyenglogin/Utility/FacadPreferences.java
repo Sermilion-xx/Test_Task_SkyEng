@@ -30,4 +30,10 @@ public class FacadPreferences {
         return pref.getString(KEY_PREF_TOKEN, "");
     }
 
+    public static void clearPref(Context context){
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.clear();
+        editor.apply();
+    }
+
 }
