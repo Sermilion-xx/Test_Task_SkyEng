@@ -11,6 +11,9 @@ import ru.skyeng.skyenglogin.network.authorization.SEAuthorizationServer;
 import ru.skyeng.skyenglogin.network.authorization.SEJWTGenerator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static ru.skyeng.skyenglogin.network.authorization.SEAuthorizationServer.ERROR_WRONG_CREDENTIALS;
+import static ru.skyeng.skyenglogin.network.authorization.SEAuthorizationServer.ERROR_WRONG_EMAIL;
+import static ru.skyeng.skyenglogin.network.authorization.SEAuthorizationServer.ERROR_WRONG_TOKEN;
 import static ru.skyeng.skyenglogin.network.authorization.SEAuthorizationServer.OPERATION_TIMEOUT;
 
 /**
@@ -90,7 +93,8 @@ public class AuthTest {
 
             @Override
             public void onError(Throwable throwable) {
-                assertThat("Не верный тип ошибки.", throwable.getMessage().equals("Ошибка авторизации. Неверные данные.") || throwable.getMessage().equals(OPERATION_TIMEOUT));
+                assertThat("Не верный тип ошибки.", throwable.getMessage().equals(ERROR_WRONG_CREDENTIALS)
+                        || throwable.getMessage().equals(OPERATION_TIMEOUT));
             }
         });
     }
@@ -106,7 +110,7 @@ public class AuthTest {
     @Test
     public void shouldNotReturnOneTimePasswordIfUserDoesNotExists(){
         mServer.generateOneTimePass("wrong@email", oneTimePasswordCallback);
-        assertThat("Не верный тип ошибки.", oneTimePasswordExceptionMessage.equals("Указанная почта не существует"));
+        assertThat("Не верный тип ошибки.", oneTimePasswordExceptionMessage.equals(ERROR_WRONG_EMAIL));
     }
 
     @Test
@@ -149,7 +153,7 @@ public class AuthTest {
 
             @Override
             public void onError(Throwable throwable) {
-                assertThat("Не верное сообщение о ошибке", throwable.getMessage().equals("Не верный токен."));
+                assertThat("Не верное сообщение о ошибке", throwable.getMessage().equals(ERROR_WRONG_TOKEN));
             }
         });
     }

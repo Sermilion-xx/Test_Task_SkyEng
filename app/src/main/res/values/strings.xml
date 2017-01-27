@@ -15,4 +15,5 @@
     <string name="enter_code">Введите код (отправленный на телефон </string>
     <string name="resend_code">Выслать код повторно</string>
     <string name="waiting_resend_code">Выслать код повторно (%1$s)</string>
+    <string name="email_malformed">Не верный формат имейл адреса</string>
 </resources>

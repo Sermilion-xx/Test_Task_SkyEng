@@ -82,7 +82,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mPasswordEditText = (EditText) findViewById(R.id.login_password);
         mPasswordEditText.addTextChangedListener(textWatcher);
         mGetCodeOrLoginButton = (Button) findViewById(R.id.button_get_code_or_login);
-        //TODO: preserve button state on orientation change
         mLoginDefaultOrCode = (Button) findViewById(R.id.default_login_or_code);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
@@ -105,14 +104,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void afterTextChanged(Editable editable) {
-            if (mEmailEditTex.getText().length()==0) {
+            boolean emailHasText = mEmailEditTex.getText().length() > 0;
+            boolean passwordNotVisiblePass = mPasswordEditText.getVisibility() == View.GONE;
+            boolean passwordHasTextPass = mPasswordEditText.getText().length() > 0;
+
+            if (!emailHasText || (!passwordHasTextPass && !passwordNotVisiblePass)) {
                 mGetCodeOrLoginButton.setEnabled(false);
             } else {
-                boolean emailHasText = mEmailEditTex.getText().length() > 0;
-                if (((mPasswordEditText.getText().length() > 0 && emailHasText) ||
-                        (mPasswordEditText.getVisibility() == View.GONE && emailHasText))) {
-                    mGetCodeOrLoginButton.setEnabled(true);
-                }
+                mGetCodeOrLoginButton.setEnabled(true);
             }
         }
 
@@ -131,12 +130,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String password = mPasswordEditText.getText().toString();
         switch (v.getId()) {
             case R.id.button_get_code_or_login:
-                mProgressBar.setVisibility(View.VISIBLE);
                 FacadCommon.hideKeyboard(this);
-                if (loginByCode) {
-                    mController.getOneTimePassword(email);
+                if (!mEmailEditTex.getText().toString().contains("@") ||
+                        !mEmailEditTex.getText().toString().contains(".")) {
+                    Snackbar.make(coordinatorLayout, getString(R.string.email_malformed), Snackbar.LENGTH_LONG).show();
                 } else {
-                    mController.authorize(email, password);
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    if (loginByCode) {
+                        mController.getOneTimePassword(email);
+                    } else {
+                        mController.authorize(email, password);
+                    }
                 }
                 break;
             case R.id.default_login_or_code:
@@ -165,8 +169,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(this, LogoutActivity.class);
             startActivity(intent);
         } else if (requestType == TYPE_TEMP_PASSWORD) {
-            FacadCommon.createNotification(result, this, LoginActivity.class, NOTIFICATION_ID);
-            startActivity(LoginCodeActivity.receiveIntent(this, mEmailEditTex.getText().toString()));
+            FacadCommon.createNotification(result.split("/")[0], this, LoginActivity.class, NOTIFICATION_ID);
+            String phone = result.split("/")[1];
+            String asterixedPhone = phone.substring(0, 5) + "*****" + phone.substring(10, phone.length());
+            String email = mEmailEditTex.getText().toString();
+            startActivity(LoginCodeActivity.receiveIntent(this, asterixedPhone, email));
         }
     }
 

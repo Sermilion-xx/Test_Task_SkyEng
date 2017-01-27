@@ -20,33 +20,33 @@ import android.widget.TextView;
 
 import javax.inject.Inject;
 
+import ru.skyeng.skyenglogin.R;
 import ru.skyeng.skyenglogin.application.SEApplication;
 import ru.skyeng.skyenglogin.network.interfaces.SENetworkCallback;
-import ru.skyeng.skyenglogin.R;
 import ru.skyeng.skyenglogin.utility.FacadCommon;
 
 import static ru.skyeng.skyenglogin.network.authorization.SEAuthorizationServer.TYPE_TEMP_PASSWORD;
 
 public class LoginCodeActivity extends AppCompatActivity implements View.OnClickListener, SENetworkCallback<String> {
 
-    public static final String KEY_PHONE = "email";
+    public static final String KEY_PHONE = "phone";
+    public static final String KEY_EMAIL = "email";
     private static final String KEY_TIMER_COUNT = "timerCount";
-    private static final int TIMER_COUNT = 10000;
-    private TextView mCodeText;
+    private static int TIMER_COUNT = 60000;
     private EditText mCodeEditText;
     private Button mLoginButton;
     private Button mResendCodeButton;
-    private int count = TIMER_COUNT;
-    private String mPhone;
+    private String mTempPassword;
+    private String mEmail;
     private ProgressBar mProgressBar;
     private CoordinatorLayout coordinatorLayout;
     private static int NOTIFICATION_ID = 0;
 
-    private CountDownTimer countDownTimer = new CountDownTimer(count, 1000) {
+    private CountDownTimer countDownTimer = new CountDownTimer(TIMER_COUNT, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             mResendCodeButton.setText(String.format(getResources().getString(R.string.waiting_resend_code), String.valueOf(millisUntilFinished / 1000)));
-            count = (int) (millisUntilFinished);
+            TIMER_COUNT = (int) (millisUntilFinished);
         }
 
         @Override
@@ -69,15 +69,16 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
         mController.setModel(model);
     }
 
-    public static Intent receiveIntent(Context context, String email) {
+    public static Intent receiveIntent(Context context, String password, String email) {
         Intent intent = new Intent(context, LoginCodeActivity.class);
-        intent.putExtra(KEY_PHONE, email);
+        intent.putExtra(KEY_PHONE, password);
+        intent.putExtra(KEY_EMAIL, email);
         return intent;
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(KEY_TIMER_COUNT, count);
+        outState.putInt(KEY_TIMER_COUNT, TIMER_COUNT);
         super.onSaveInstanceState(outState);
     }
 
@@ -92,19 +93,21 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mPhone = getIntent().getStringExtra(KEY_PHONE);
+        Intent intent = getIntent();
+        mTempPassword = intent.getStringExtra(KEY_PHONE);
+        mEmail = intent.getStringExtra(KEY_EMAIL);
         iniViews();
 
         if (savedInstanceState != null) {
-            count = savedInstanceState.getInt(KEY_TIMER_COUNT);
+            TIMER_COUNT = savedInstanceState.getInt(KEY_TIMER_COUNT);
         }
         countDownTimer.start();
     }
 
     private void iniViews() {
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-        mCodeText = (TextView) findViewById(R.id.code_text);
-        mCodeText.append(" "+mPhone+")");
+        TextView mCodeText = (TextView) findViewById(R.id.code_text);
+        mCodeText.append(" "+ mTempPassword +")");
         mCodeEditText = (EditText) findViewById(R.id.login_code);
         mCodeEditText.addTextChangedListener(textWatcher);
         mLoginButton = (Button) findViewById(R.id.button_login);
@@ -121,12 +124,12 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
         FacadCommon.hideKeyboard(this);
         if(v.getId()==R.id.code_resend_button){
             mResendCodeButton.setEnabled(false);
-            count = TIMER_COUNT;
+            TIMER_COUNT = 60000;
             countDownTimer.start();
-            mController.getOneTimePassword(mPhone);
+            mController.getOneTimePassword(mEmail);
         }else if(v.getId()==R.id.button_login){
             mProgressBar.setVisibility(View.VISIBLE);
-            mController.authorize(mPhone, mCodeEditText.getText().toString());
+            mController.authorize(mEmail, mCodeEditText.getText().toString());
         }
     }
 
@@ -152,7 +155,7 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onSuccess(String result, int requestType) {
         if(requestType==TYPE_TEMP_PASSWORD){
-            FacadCommon.createNotification(result, this, LoginCodeActivity.class, NOTIFICATION_ID);
+            FacadCommon.createNotification(result.split("/")[0], this, LoginCodeActivity.class, NOTIFICATION_ID);
         }else{
             mProgressBar.setVisibility(View.GONE);
             Intent intent = new Intent(this, LogoutActivity.class);

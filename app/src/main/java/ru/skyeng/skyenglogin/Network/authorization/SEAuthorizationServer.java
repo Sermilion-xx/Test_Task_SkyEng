@@ -29,6 +29,10 @@ public class SEAuthorizationServer implements AuthorizationServer<String> {
 
 
     public static final String OPERATION_TIMEOUT = "Тайм аут запроса. Попробуйте еще раз.";
+    public static final String ERROR_SERVER_ERROR = "На сервере произошла ошибка. Повторите позже";
+    public static final String ERROR_WRONG_CREDENTIALS = "Не верный адрес электронной почты или пароль.";
+    public static final String ERROR_WRONG_EMAIL = "Указанная почта не существует.";
+    public static final String ERROR_WRONG_TOKEN = "Не верный токен.";
     private static SEAuthorizationServer INSTANCE;
     private static final String SUBJECT_LOGIN = "Login";
     public static final int TYPE_TEMP_PASSWORD = 0;
@@ -55,15 +59,15 @@ public class SEAuthorizationServer implements AuthorizationServer<String> {
         mRandom = new Random();
         mTempPassGenerator = new TempPassGenerator(6);
         this.mLoginDataList = new ArrayList<>();
-        this.mLoginDataList.add(new SEUser("+79881112233", "1"));
-        this.mLoginDataList.add(new SEUser("+79881112232", "2"));
+        this.mLoginDataList.add(new SEUser("email1@email.ru", "1","+79112223344"));
+        this.mLoginDataList.add(new SEUser("email2@email.ru", "2", "+79112223345"));
     }
 
     @Override
     public void authorize(final String email,
                           final String password, final SENetworkCallback<String> callback) {
         if (mGenerator == null) {
-            callback.onError(new SEInternalServerError("На сервере произошла ошибка. Повторите позже"));
+            callback.onError(new SEInternalServerError(ERROR_SERVER_ERROR));
             return;
         }
         int chance = mRandom.nextInt(5);
@@ -82,7 +86,7 @@ public class SEAuthorizationServer implements AuthorizationServer<String> {
                 }
             }
             if (!found) {
-                callback.onError(new SEAuthorizationException("Ошибка авторизации. Неверные данные."));
+                callback.onError(new SEAuthorizationException(ERROR_WRONG_CREDENTIALS));
             } else {
                 callback.onSuccess(token, TYPE_AUTHORIZE);
                 localUser.setTempPassword(null);
@@ -98,11 +102,11 @@ public class SEAuthorizationServer implements AuthorizationServer<String> {
             if (user.getEmail().equals(email)) {
                 String tempPass = mTempPassGenerator.nextString();
                 user.setTempPassword(tempPass);
-                callback.onSuccess(tempPass, TYPE_TEMP_PASSWORD);
+                callback.onSuccess(tempPass+"/"+user.getPhoneNumber(), TYPE_TEMP_PASSWORD);
                 emailFound = true;
             }
             if (!emailFound) {
-                callback.onError(new SENoSuchEmailException("Указанный номер не существует."));
+                callback.onError(new SENoSuchEmailException(ERROR_WRONG_EMAIL));
             }
         }
     }
@@ -115,7 +119,7 @@ public class SEAuthorizationServer implements AuthorizationServer<String> {
         if (mLoginDataList.contains(new SEUser(emailValue, passwordValue))) {
             callback.onSuccess(true, TYPE_AUTHENTICATE);
         }else {
-            callback.onError(new SEAuthorizationException("Не верный токен."));
+            callback.onError(new SEAuthorizationException(ERROR_WRONG_TOKEN));
         }
     }
 }
