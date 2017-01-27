@@ -1,11 +1,14 @@
 package ru.skyeng.skyenglogin.network.authorization;
 
+import android.util.Base64;
+
 import java.security.Key;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
+//import javax.xml.bind.DatatypeConverter;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -39,7 +42,7 @@ public class SEJWTGenerator implements JWTGenerator {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary("se_test_secret");
+        byte[] apiKeySecretBytes = Arrays.toString(Base64.decode("se_test_secret", Base64.DEFAULT)).getBytes(); // = DatatypeConverter.parseBase64Binary("se_test_secret");
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         return Jwts.builder()
@@ -52,7 +55,7 @@ public class SEJWTGenerator implements JWTGenerator {
     }
 
     public Claims decodeToken(String jwt) {
-        return parser().setSigningKey(DatatypeConverter.parseBase64Binary("se_test_secret"))
+        return parser().setSigningKey(Arrays.toString(Base64.decode("se_test_secret", Base64.DEFAULT)).getBytes())
                 .parseClaimsJws(jwt).getBody();
     }
 }

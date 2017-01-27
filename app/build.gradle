@@ -40,9 +40,6 @@ dependencies {
     compile "com.android.support:design:$support_version"
     testCompile 'junit:junit:4.12'
     compile 'io.jsonwebtoken:jjwt:0.7.0'
-    compile 'org.javatuples:javatuples:1.2'
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
     annotationProcessor "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
-    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.6'
-    compile 'org.mockito:mockito-android:2.6.8'
 }

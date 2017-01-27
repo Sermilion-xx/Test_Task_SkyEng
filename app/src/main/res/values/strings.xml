@@ -6,12 +6,13 @@
     <string name="login_password">Обычный вход с паролем</string>
     <string name="login_code">Войти без пароля</string>
     <string name="login_info">Сложный пароль или не хотите искать — войдите по коду. Или используйте обычный вход.</string>
+    <string name="login_info_no_password">Сложный пароль или не хотите искать — используйте воход без пароля.</string>
     <string name="password">Пароль</string>
     <string name="login">Войти</string>
     <string name="Code">Код</string>
     <string name="logout">Выйти</string>
-    <string name="wrong_email">"Указанная почта не существует."</string>
-    <string name="enter_code">Введите код (отправленный на телефон</string>
+    <string name="wrong_email">"Указанный номер не существует."</string>
+    <string name="enter_code">Введите код (отправленный на телефон </string>
     <string name="resend_code">Выслать код повторно</string>
     <string name="waiting_resend_code">Выслать код повторно (%1$s)</string>
 </resources>

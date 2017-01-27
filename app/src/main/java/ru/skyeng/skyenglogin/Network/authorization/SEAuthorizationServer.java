@@ -55,8 +55,8 @@ public class SEAuthorizationServer implements AuthorizationServer<String> {
         mRandom = new Random();
         mTempPassGenerator = new TempPassGenerator(6);
         this.mLoginDataList = new ArrayList<>();
-        this.mLoginDataList.add(new SEUser("email1@email.ru", "1"));
-        this.mLoginDataList.add(new SEUser("email2@email.ru", "2"));
+        this.mLoginDataList.add(new SEUser("+79881112233", "1"));
+        this.mLoginDataList.add(new SEUser("+79881112232", "2"));
     }
 
     @Override
@@ -102,11 +102,9 @@ public class SEAuthorizationServer implements AuthorizationServer<String> {
                 emailFound = true;
             }
             if (!emailFound) {
-                callback.onError(new SENoSuchEmailException("Указанная почта не существует"));
+                callback.onError(new SENoSuchEmailException("Указанный номер не существует."));
             }
         }
-
-
     }
 
     @Override

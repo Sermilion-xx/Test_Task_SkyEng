@@ -29,7 +29,7 @@ import static ru.skyeng.skyenglogin.network.authorization.SEAuthorizationServer.
 
 public class LoginCodeActivity extends AppCompatActivity implements View.OnClickListener, SENetworkCallback<String> {
 
-    public static final String KEY_EMAIL = "email";
+    public static final String KEY_PHONE = "email";
     private static final String KEY_TIMER_COUNT = "timerCount";
     private static final int TIMER_COUNT = 10000;
     private TextView mCodeText;
@@ -37,7 +37,7 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
     private Button mLoginButton;
     private Button mResendCodeButton;
     private int count = TIMER_COUNT;
-    private String mEmail;
+    private String mPhone;
     private ProgressBar mProgressBar;
     private CoordinatorLayout coordinatorLayout;
     private static int NOTIFICATION_ID = 0;
@@ -71,7 +71,7 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
 
     public static Intent receiveIntent(Context context, String email) {
         Intent intent = new Intent(context, LoginCodeActivity.class);
-        intent.putExtra(KEY_EMAIL, email);
+        intent.putExtra(KEY_PHONE, email);
         return intent;
     }
 
@@ -92,7 +92,7 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mEmail = getIntent().getStringExtra(KEY_EMAIL);
+        mPhone = getIntent().getStringExtra(KEY_PHONE);
         iniViews();
 
         if (savedInstanceState != null) {
@@ -104,6 +104,7 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
     private void iniViews() {
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         mCodeText = (TextView) findViewById(R.id.code_text);
+        mCodeText.append(" "+mPhone+")");
         mCodeEditText = (EditText) findViewById(R.id.login_code);
         mCodeEditText.addTextChangedListener(textWatcher);
         mLoginButton = (Button) findViewById(R.id.button_login);
@@ -122,10 +123,10 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
             mResendCodeButton.setEnabled(false);
             count = TIMER_COUNT;
             countDownTimer.start();
-            mController.getOneTimePassword(mEmail);
+            mController.getOneTimePassword(mPhone);
         }else if(v.getId()==R.id.button_login){
             mProgressBar.setVisibility(View.VISIBLE);
-            mController.authorize(mEmail, mCodeEditText.getText().toString());
+            mController.authorize(mPhone, mCodeEditText.getText().toString());
         }
     }
 
