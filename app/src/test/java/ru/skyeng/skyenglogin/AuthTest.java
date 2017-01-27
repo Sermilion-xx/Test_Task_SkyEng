@@ -31,11 +31,7 @@ public class AuthTest {
     private AuthorizationServer<String> mServer;
     private JWTGenerator generator;
     private String email;
-    private String password;
     private int index = 0;
-    private String correctToken = "eyJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6IjEiLCJlbWFpbCI6ImVtYWlsMUBlbWFpbC5ydSJ9.UL02E3dgVlJoiIjln24uOGLzSF_jOncv9oPbNv4Jwac";
-    private String wrongToken = "eyJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6IjIiLCJlbWFpbCI6ImVtYWlsMkBlbWFpbC5ydSJ9.u63DYF9kFcC06_zDd9R_StkJ3Yh538CRqBWUWDBeFTw";
-
     private final String[] passwords = new String[2];
     private String oneTimePasswordExceptionMessage;
     private SENetworkCallback<String> oneTimePasswordCallback = new SENetworkCallback<String>(){
@@ -57,30 +53,11 @@ public class AuthTest {
         mServer = SEAuthorizationServer.getInstance();
         mServer.setJWTGenerator(generator);
         email = "email1@email.ru";
-        password = "1";
     }
 
-    @Test
-    public void shouldReturnCorrectTokenForExistingUser(){
-        mServer.authorize(email, password, new SENetworkCallback<String>() {
-            @Override
-            public void onSuccess(String result, int requestType) {
-                Claims claims = generator.decodeToken(result);
-                assertThat("Клеймы отличаются",
-                        claims.get(SEJWTGenerator.KEY_PASSWORD).equals(password) &&
-                        claims.get(SEJWTGenerator.KEY_EMAIL).equals(email));
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                assertThat("Не верное описание ошибки", throwable.getMessage().equals("") || throwable.getMessage().equals(OPERATION_TIMEOUT));
-            }
-        });
-    }
 
     @Test
     public void shouldThrowSEAuthorizationExceptionForNonExistingUser(){
-
         final String password = "wrongPassword";
         mServer.authorize(email, password, new SENetworkCallback<String>() {
             @Override
@@ -111,51 +88,6 @@ public class AuthTest {
     public void shouldNotReturnOneTimePasswordIfUserDoesNotExists(){
         mServer.generateOneTimePass("wrong@email", oneTimePasswordCallback);
         assertThat("Не верный тип ошибки.", oneTimePasswordExceptionMessage.equals(ERROR_WRONG_EMAIL));
-    }
-
-    @Test
-    public void shouldAuthenticateIfUserExists(){
-        mServer.authenticate(correctToken, new SENetworkCallback<Boolean>() {
-            @Override
-            public void onSuccess(Boolean result, int requestType) {
-                assertThat("", result);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-
-            }
-        });
-    }
-
-    @Test
-    public void shouldAuthenticateForCorrectToken(){
-        mServer.authenticate(correctToken, new SENetworkCallback<Boolean>() {
-            @Override
-            public void onSuccess(Boolean result, int requestType) {
-                assertThat("", result);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-
-            }
-        });
-    }
-
-    @Test
-    public void shouldNotAuthenticateForWrongToken(){
-        mServer.authenticate(wrongToken, new SENetworkCallback<Boolean>() {
-            @Override
-            public void onSuccess(Boolean result, int requestType) {
-                assertThat("Операция не должна выполнится", !result);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                assertThat("Не верное сообщение о ошибке", throwable.getMessage().equals(ERROR_WRONG_TOKEN));
-            }
-        });
     }
 
 }

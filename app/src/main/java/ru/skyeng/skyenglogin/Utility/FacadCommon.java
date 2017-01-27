@@ -4,12 +4,18 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 
 import ru.skyeng.skyenglogin.R;
+import ru.skyeng.skyenglogin.loginModule.LoginActivity;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 

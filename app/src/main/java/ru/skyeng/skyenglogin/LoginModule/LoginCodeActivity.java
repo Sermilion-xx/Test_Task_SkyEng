@@ -1,7 +1,9 @@
 package ru.skyeng.skyenglogin.loginModule;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.CoordinatorLayout;
@@ -38,7 +40,7 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
     private Button mResendCodeButton;
     private String mTempPassword;
     private String mEmail;
-    private ProgressBar mProgressBar;
+    private ProgressDialog mProgressDialog;
     private CoordinatorLayout coordinatorLayout;
     private static int NOTIFICATION_ID = 0;
 
@@ -109,12 +111,13 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
         TextView mCodeText = (TextView) findViewById(R.id.code_text);
         mCodeText.append(" "+ mTempPassword +")");
         mCodeEditText = (EditText) findViewById(R.id.login_code);
+        mCodeEditText.getBackground().mutate().setColorFilter(getResources().getColor(R.color.colorTextMain), PorterDuff.Mode.SRC_ATOP);
         mCodeEditText.addTextChangedListener(textWatcher);
         mLoginButton = (Button) findViewById(R.id.button_login);
         mResendCodeButton = (Button) findViewById(R.id.code_resend_button);
         mResendCodeButton.setEnabled(false);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mProgressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY);
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage(getString(R.string.dialog_message_code_login));
         mLoginButton.setOnClickListener(this);
         mResendCodeButton.setOnClickListener(this);
     }
@@ -128,7 +131,7 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
             countDownTimer.start();
             mController.getOneTimePassword(mEmail);
         }else if(v.getId()==R.id.button_login){
-            mProgressBar.setVisibility(View.VISIBLE);
+            mProgressDialog.show();
             mController.authorize(mEmail, mCodeEditText.getText().toString());
         }
     }
@@ -157,7 +160,7 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
         if(requestType==TYPE_TEMP_PASSWORD){
             FacadCommon.createNotification(result.split("/")[0], this, LoginCodeActivity.class, NOTIFICATION_ID);
         }else{
-            mProgressBar.setVisibility(View.GONE);
+            mProgressDialog.hide();
             Intent intent = new Intent(this, LogoutActivity.class);
             startActivity(intent);
         }
@@ -166,7 +169,7 @@ public class LoginCodeActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onError(Throwable throwable) {
-        mProgressBar.setVisibility(View.GONE);
+        mProgressDialog.show();
         Snackbar.make(coordinatorLayout, throwable.getMessage(), Snackbar.LENGTH_LONG).show();
     }
 

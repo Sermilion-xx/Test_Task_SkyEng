@@ -16,4 +16,6 @@
     <string name="resend_code">Выслать код повторно</string>
     <string name="waiting_resend_code">Выслать код повторно (%1$s)</string>
     <string name="email_malformed">Не верный формат имейл адреса</string>
+    <string name="dialog_message_login">"Отправка кода \nПодождите"</string>
+    <string name="dialog_message_code_login">"Выполняется вход \nПодождите"</string>
 </resources>

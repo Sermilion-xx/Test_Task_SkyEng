@@ -42,7 +42,7 @@ public class SEJWTGenerator implements JWTGenerator {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
-        byte[] apiKeySecretBytes = Arrays.toString(Base64.decode("se_test_secret", Base64.DEFAULT)).getBytes(); // = DatatypeConverter.parseBase64Binary("se_test_secret");
+        byte[] apiKeySecretBytes = Arrays.toString(Base64.decode("se_test_secret", Base64.DEFAULT)).getBytes();
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         return Jwts.builder()

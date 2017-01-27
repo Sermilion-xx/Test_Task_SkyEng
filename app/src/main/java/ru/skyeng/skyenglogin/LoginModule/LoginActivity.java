@@ -1,10 +1,11 @@
 package ru.skyeng.skyenglogin.loginModule;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -12,7 +13,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import javax.inject.Inject;
@@ -37,9 +37,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText mPasswordEditText;
     private Button mGetCodeOrLoginButton;
     private Button mLoginDefaultOrCode;
-    private ProgressBar mProgressBar;
+//    private ProgressBar mProgressBar;
     private CoordinatorLayout coordinatorLayout;
     private boolean loginByCode = true;
+    private ProgressDialog mProgressDialog;
 
     @Inject
     protected LoginController mController;
@@ -78,13 +79,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         mLoginInfo = (TextView) findViewById(R.id.login_info);
         mEmailEditTex = (EditText) findViewById(R.id.login_email);
+        mEmailEditTex.getBackground().mutate().setColorFilter(getResources().getColor(R.color.colorTextMain), PorterDuff.Mode.SRC_ATOP);
         mEmailEditTex.addTextChangedListener(textWatcher);
         mPasswordEditText = (EditText) findViewById(R.id.login_password);
+        mEmailEditTex.getBackground().mutate().setColorFilter(getResources().getColor(R.color.colorTextMain), PorterDuff.Mode.SRC_ATOP);
         mPasswordEditText.addTextChangedListener(textWatcher);
         mGetCodeOrLoginButton = (Button) findViewById(R.id.button_get_code_or_login);
         mLoginDefaultOrCode = (Button) findViewById(R.id.default_login_or_code);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-
+        mProgressDialog = new ProgressDialog(LoginActivity.this);
         if (savedInstanceState != null) {
             loginByCode = savedInstanceState.getBoolean(KEY_LOGIN_BY_CODE);
             mGetCodeOrLoginButton.setEnabled(savedInstanceState.getBoolean(KEY_BUTTON_ENABLED));
@@ -96,7 +98,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             mLoginDefaultOrCode.setText(savedInstanceState.getString(KEY_BUTTON_SECONDARY_TEXT));
         }
-        mProgressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.colorAccent), android.graphics.PorterDuff.Mode.MULTIPLY);
         mGetCodeOrLoginButton.setOnClickListener(this);
         mLoginDefaultOrCode.setOnClickListener(this);
     }
@@ -135,12 +136,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         !mEmailEditTex.getText().toString().contains(".")) {
                     Snackbar.make(coordinatorLayout, getString(R.string.email_malformed), Snackbar.LENGTH_LONG).show();
                 } else {
-                    mProgressBar.setVisibility(View.VISIBLE);
                     if (loginByCode) {
+                        mProgressDialog.setMessage(getString(R.string.dialog_message_login));
                         mController.getOneTimePassword(email);
                     } else {
+                        mProgressDialog.setMessage(getString(R.string.dialog_message_code_login));
                         mController.authorize(email, password);
                     }
+                    mProgressDialog.show();
                 }
                 break;
             case R.id.default_login_or_code:
@@ -163,7 +166,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onSuccess(final String result, int requestType) {
-        mProgressBar.setVisibility(View.GONE);
+        mProgressDialog.hide();
         if (requestType == TYPE_AUTHORIZE) {
             mController.saveToken(result);
             Intent intent = new Intent(this, LogoutActivity.class);
@@ -179,7 +182,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onError(Throwable throwable) {
-        mProgressBar.setVisibility(View.GONE);
+        mProgressDialog.show();
         Snackbar.make(coordinatorLayout, throwable.getMessage(), Snackbar.LENGTH_LONG).show();
     }
 

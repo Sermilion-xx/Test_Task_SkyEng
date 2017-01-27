@@ -7,8 +7,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/colorLightGray</item>
-        <item name="colorControlActivated">@color/colorTextMain</item>
-        <item name="colorControlHighlight">@color/colorTextMain</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
         <!--<item name="android:textViewStyle">@style/RobotoThinTextViewStyle</item>-->
         <!--<item name="android:buttonStyle">@style/RobotoButtonStyle</item>-->
     </style>
