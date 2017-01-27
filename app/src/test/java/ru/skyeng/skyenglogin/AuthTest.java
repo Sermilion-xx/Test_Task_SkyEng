@@ -4,14 +4,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import io.jsonwebtoken.Claims;
-import ru.skyeng.skyenglogin.Network.Interfaces.AuthorizationServer;
-import ru.skyeng.skyenglogin.Network.Interfaces.JWTGenerator;
-import ru.skyeng.skyenglogin.Network.Interfaces.SENetworkCallback;
-import ru.skyeng.skyenglogin.Network.SEAuthorizationServer;
-import ru.skyeng.skyenglogin.Network.SEJWTGenerator;
+import ru.skyeng.skyenglogin.network.interfaces.AuthorizationServer;
+import ru.skyeng.skyenglogin.network.interfaces.JWTGenerator;
+import ru.skyeng.skyenglogin.network.interfaces.SENetworkCallback;
+import ru.skyeng.skyenglogin.network.authorization.SEAuthorizationServer;
+import ru.skyeng.skyenglogin.network.authorization.SEJWTGenerator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static ru.skyeng.skyenglogin.Network.SEAuthorizationServer.OPERATION_TIMEOUT;
+import static ru.skyeng.skyenglogin.network.authorization.SEAuthorizationServer.OPERATION_TIMEOUT;
 
 /**
  * ---------------------------------------------------

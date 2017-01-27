@@ -1,6 +1,4 @@
-package ru.skyeng.skyenglogin.Utility;
-
-import android.os.Bundle;
+package ru.skyeng.skyenglogin.utility;
 
 /**
  * ---------------------------------------------------

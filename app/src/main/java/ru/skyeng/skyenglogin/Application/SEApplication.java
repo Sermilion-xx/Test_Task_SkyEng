@@ -1,17 +1,15 @@
-package ru.skyeng.skyenglogin.Application;
+package ru.skyeng.skyenglogin.application;
 
 import android.app.Application;
 
 import javax.inject.Inject;
 
-import ru.skyeng.skyenglogin.LoginModule.LoginDagger.DaggerLoginCodeDiComponent;
-import ru.skyeng.skyenglogin.LoginModule.LoginDagger.DaggerLoginDiComponent;
-import ru.skyeng.skyenglogin.LoginModule.LoginDagger.LoginCodeDiComponent;
-import ru.skyeng.skyenglogin.LoginModule.LoginDagger.LoginDiComponent;
-import ru.skyeng.skyenglogin.Network.Interfaces.AuthorizationServer;
-import ru.skyeng.skyenglogin.Network.Interfaces.JWTGenerator;
-import ru.skyeng.skyenglogin.Network.SEAuthorizationServer;
-import ru.skyeng.skyenglogin.Network.SEJWTGenerator;
+import ru.skyeng.skyenglogin.loginModule.LoginDagger.DaggerLoginCodeDiComponent;
+import ru.skyeng.skyenglogin.loginModule.LoginDagger.DaggerLoginDiComponent;
+import ru.skyeng.skyenglogin.loginModule.LoginDagger.LoginCodeDiComponent;
+import ru.skyeng.skyenglogin.loginModule.LoginDagger.LoginDiComponent;
+import ru.skyeng.skyenglogin.network.authorization.SEAuthorizationServer;
+import ru.skyeng.skyenglogin.network.authorization.SEJWTGenerator;
 
 /**
  * ---------------------------------------------------

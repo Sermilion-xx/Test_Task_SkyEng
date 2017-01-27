@@ -1,9 +1,9 @@
-package ru.skyeng.skyenglogin.LoginModule;
+package ru.skyeng.skyenglogin.loginModule;
 
 import android.content.Context;
 import android.os.Handler;
 
-import ru.skyeng.skyenglogin.Utility.FacadPreferences;
+import ru.skyeng.skyenglogin.utility.FacadPreferences;
 
 /**
  * ---------------------------------------------------

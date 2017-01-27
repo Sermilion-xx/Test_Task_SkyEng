@@ -1,4 +1,4 @@
-package ru.skyeng.skyenglogin.LoginModule;
+package ru.skyeng.skyenglogin.loginModule;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,12 +20,12 @@ import android.widget.TextView;
 
 import javax.inject.Inject;
 
-import ru.skyeng.skyenglogin.Application.SEApplication;
-import ru.skyeng.skyenglogin.Network.Interfaces.SENetworkCallback;
+import ru.skyeng.skyenglogin.application.SEApplication;
+import ru.skyeng.skyenglogin.network.interfaces.SENetworkCallback;
 import ru.skyeng.skyenglogin.R;
-import ru.skyeng.skyenglogin.Utility.FacadCommon;
+import ru.skyeng.skyenglogin.utility.FacadCommon;
 
-import static ru.skyeng.skyenglogin.Network.SEAuthorizationServer.TYPE_TEMP_PASSWORD;
+import static ru.skyeng.skyenglogin.network.authorization.SEAuthorizationServer.TYPE_TEMP_PASSWORD;
 
 public class LoginCodeActivity extends AppCompatActivity implements View.OnClickListener, SENetworkCallback<String> {
 

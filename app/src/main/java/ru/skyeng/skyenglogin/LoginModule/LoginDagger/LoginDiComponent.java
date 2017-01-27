@@ -1,12 +1,9 @@
-package ru.skyeng.skyenglogin.LoginModule.LoginDagger;
-
-import android.app.Activity;
+package ru.skyeng.skyenglogin.loginModule.LoginDagger;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
-import ru.skyeng.skyenglogin.Application.SEApplication;
-import ru.skyeng.skyenglogin.LoginModule.LoginActivity;
+import ru.skyeng.skyenglogin.loginModule.LoginActivity;
 
 /**
  * ---------------------------------------------------

@@ -1,9 +1,9 @@
-package ru.skyeng.skyenglogin.LoginModule;
+package ru.skyeng.skyenglogin.loginModule;
 
 import android.content.Context;
 
-import ru.skyeng.skyenglogin.Network.Interfaces.SENetworkCallback;
-import ru.skyeng.skyenglogin.Network.SEAuthorizationServer;
+import ru.skyeng.skyenglogin.network.interfaces.SENetworkCallback;
+import ru.skyeng.skyenglogin.network.authorization.SEAuthorizationServer;
 
 /**
  * ---------------------------------------------------

@@ -1,4 +1,4 @@
-package ru.skyeng.skyenglogin.Utility;
+package ru.skyeng.skyenglogin.utility;
 
 import java.util.Random;
 

@@ -1,6 +1,4 @@
-package ru.skyeng.skyenglogin.Network;
-
-import android.util.Base64;
+package ru.skyeng.skyenglogin.network.authorization;
 
 import java.security.Key;
 import java.util.Date;
@@ -13,7 +11,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
-import ru.skyeng.skyenglogin.Network.Interfaces.JWTGenerator;
+import ru.skyeng.skyenglogin.network.interfaces.JWTGenerator;
 
 import static io.jsonwebtoken.Jwts.parser;
 

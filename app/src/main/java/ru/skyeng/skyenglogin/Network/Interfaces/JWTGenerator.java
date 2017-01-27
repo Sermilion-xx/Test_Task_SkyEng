@@ -1,6 +1,4 @@
-package ru.skyeng.skyenglogin.Network.Interfaces;
-
-import android.util.Pair;
+package ru.skyeng.skyenglogin.network.interfaces;
 
 import io.jsonwebtoken.Claims;
 

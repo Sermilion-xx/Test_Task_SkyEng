@@ -1,4 +1,4 @@
-package ru.skyeng.skyenglogin.Network;
+package ru.skyeng.skyenglogin.network.authorization;
 
 
 import java.util.ArrayList;
@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Random;
 
 import io.jsonwebtoken.Claims;
-import ru.skyeng.skyenglogin.Network.Exceptions.SEAuthorizationException;
-import ru.skyeng.skyenglogin.Network.Exceptions.SEInternalServerError;
-import ru.skyeng.skyenglogin.Network.Exceptions.SENoSuchEmailException;
-import ru.skyeng.skyenglogin.Network.Exceptions.SETimeoutException;
-import ru.skyeng.skyenglogin.Network.Interfaces.AuthorizationServer;
-import ru.skyeng.skyenglogin.Network.Interfaces.JWTGenerator;
-import ru.skyeng.skyenglogin.Network.Interfaces.SENetworkCallback;
-import ru.skyeng.skyenglogin.Utility.TempPassGenerator;
+import ru.skyeng.skyenglogin.network.exceptions.SEAuthorizationException;
+import ru.skyeng.skyenglogin.network.exceptions.SEInternalServerError;
+import ru.skyeng.skyenglogin.network.exceptions.SENoSuchEmailException;
+import ru.skyeng.skyenglogin.network.exceptions.SETimeoutException;
+import ru.skyeng.skyenglogin.network.interfaces.AuthorizationServer;
+import ru.skyeng.skyenglogin.network.interfaces.JWTGenerator;
+import ru.skyeng.skyenglogin.network.interfaces.SENetworkCallback;
+import ru.skyeng.skyenglogin.utility.TempPassGenerator;
 
 /**
  * ---------------------------------------------------

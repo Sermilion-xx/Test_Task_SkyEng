@@ -1,10 +1,9 @@
-package ru.skyeng.skyenglogin.LoginModule.LoginDagger;
+package ru.skyeng.skyenglogin.loginModule.LoginDagger;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
-import ru.skyeng.skyenglogin.LoginModule.LoginActivity;
-import ru.skyeng.skyenglogin.LoginModule.LoginCodeActivity;
+import ru.skyeng.skyenglogin.loginModule.LoginCodeActivity;
 
 /**
  * ---------------------------------------------------

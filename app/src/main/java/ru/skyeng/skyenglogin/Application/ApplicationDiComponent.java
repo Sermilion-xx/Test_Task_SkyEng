@@ -1,4 +1,4 @@
-package ru.skyeng.skyenglogin.Application;
+package ru.skyeng.skyenglogin.application;
 
 import javax.inject.Singleton;
 

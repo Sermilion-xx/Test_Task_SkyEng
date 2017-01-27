@@ -1,13 +1,9 @@
-package ru.skyeng.skyenglogin.LoginModule.LoginDagger;
-
-import javax.inject.Singleton;
+package ru.skyeng.skyenglogin.loginModule.LoginDagger;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.skyeng.skyenglogin.LoginModule.LoginController;
-import ru.skyeng.skyenglogin.LoginModule.LoginModel;
-import ru.skyeng.skyenglogin.Network.SEAuthorizationServer;
-import ru.skyeng.skyenglogin.Network.SEJWTGenerator;
+import ru.skyeng.skyenglogin.loginModule.LoginController;
+import ru.skyeng.skyenglogin.loginModule.LoginModel;
 
 /**
  * ---------------------------------------------------

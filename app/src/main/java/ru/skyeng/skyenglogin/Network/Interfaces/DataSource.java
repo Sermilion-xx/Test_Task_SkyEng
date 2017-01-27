@@ -1,4 +1,4 @@
-package ru.skyeng.skyenglogin.Network.Interfaces;
+package ru.skyeng.skyenglogin.network.interfaces;
 
 /**
  * ---------------------------------------------------

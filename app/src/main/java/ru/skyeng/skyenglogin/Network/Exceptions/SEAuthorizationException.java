@@ -1,4 +1,4 @@
-package ru.skyeng.skyenglogin.Network.Exceptions;
+package ru.skyeng.skyenglogin.network.exceptions;
 
 /**
  * ---------------------------------------------------

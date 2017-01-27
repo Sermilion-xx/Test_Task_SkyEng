@@ -1,11 +1,11 @@
-package ru.skyeng.skyenglogin.Application;
+package ru.skyeng.skyenglogin.application;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.skyeng.skyenglogin.Network.SEAuthorizationServer;
-import ru.skyeng.skyenglogin.Network.SEJWTGenerator;
+import ru.skyeng.skyenglogin.network.authorization.SEAuthorizationServer;
+import ru.skyeng.skyenglogin.network.authorization.SEJWTGenerator;
 
 /**
  * ---------------------------------------------------

@@ -1,4 +1,4 @@
-package ru.skyeng.skyenglogin.Utility;
+package ru.skyeng.skyenglogin.utility;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import ru.skyeng.skyenglogin.LoginModule.LoginActivity;
 import ru.skyeng.skyenglogin.R;
 
 import static android.content.Context.NOTIFICATION_SERVICE;

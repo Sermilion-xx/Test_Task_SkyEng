@@ -1,4 +1,4 @@
-package ru.skyeng.skyenglogin.Network;
+package ru.skyeng.skyenglogin.network.authorization;
 
 import android.support.annotation.NonNull;
 
